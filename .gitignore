@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+.DS_Store
+/server-viewer.iml
+/server-viewer.iws
+/server-viewer.ipr
