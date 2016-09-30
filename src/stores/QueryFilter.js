@@ -1,7 +1,10 @@
-import {observable, computed} from "mobx";
-import steamapps from "./steamapps";
+import {observable, computed, action} from "mobx";
+import {knownGameMaps, lookupAppId} from "./KnownGameMaps";
+import {getShortUID} from "../util";
 
 class QueryFilter {
+
+  @observable region = "WORLD";
 
   @observable gameName = "";
   @observable mapName = "";
@@ -21,17 +24,34 @@ class QueryFilter {
   @observable notFull = false;
   @observable gameTags = [];
   @observable hiddenGameTags = [];
+  @observable reset = false;
 
-  updateState(key, gameName) {
+
+  @observable needsRules = false;
+
+  queryId = getShortUID();
+
+  @action updateState(key, gameName) {
+    if (!key in this) {
+      throw error("trying to set invalid prop name: " + key);
+    }
     this[key] = gameName;
-  } 
+  }
 
-  @computed  get filter() {
+  @action resetFilter() {
+    return this.reset = true;
+  }
+
+  @computed get availableMaps() {
+    return knownGameMaps.getGameMaps(this.gameName);
+  }
+
+  @computed get filter() {
 
     return [
-      (!!this.gameName ) ? "\\appid\\" + this.lookupAppId(this.gameName) : "",
+      (!!this.gameName ) ? "\\appid\\" + lookupAppId(this.gameName) : "",
       (!!this.mapName) ? "\\map\\" + this.mapName : "",
-      (!!this.notGameName) ? "\\napp" + this.lookupAppId(this.notGameName) : "",
+      (!!this.notGameName) ? "\\napp" + lookupAppId(this.notGameName) : "",
       (!!this.matchingHostName) ? "\\name_match\\" + this.matchingHostName : "",
       (!!this.runningVersion) ? "\\version_match" + this.runningVersion : "",
       (!!this.runningModDir) ? "\\gamedir\\" + this.runningModDir : "",
@@ -41,9 +61,8 @@ class QueryFilter {
     ].join('');
   }
 
-
-  lookupAppId(gameName) {
-    return steamapps[gameName];
+  toString(){
+    return filter;
   }
 }
 

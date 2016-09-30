@@ -9,6 +9,12 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './src/index.jsx'
   ],
+  worker: {
+    output: {
+      filename: "hash.worker.js",
+      chunkFilename: "[id].hash.worker.js"
+    }
+  },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -25,6 +31,11 @@ module.exports = {
       test: /\.jsx?$/,
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
-    }]
+    },
+      {
+        test: /worker.js/,
+        loader: 'worker'
+      }]
   }
+
 };

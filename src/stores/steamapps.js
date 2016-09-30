@@ -119,5 +119,4 @@ const steamapps = [
   return gameIdMap;
 },new Map());
 
-console.log(steamapps);
 export default steamapps;

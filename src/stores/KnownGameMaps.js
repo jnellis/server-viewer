@@ -4,41 +4,44 @@ import steamapps from "./steamapps";
 
 class KnownGameMaps {
 
-  maps;
-
-  constructor() {
-
-    var temp = [...steamapps.keys()].reduce(function (acc, gamename) {
-      acc[gamename] = [];
-      return acc;
-    }, {});
-    temp["Team Fortress 2"] = ["cp_dustbowl", "pl_badwater"];
-    temp["Counter-Strike: Global Offensive"] = ["cs_italy"];
-
-    this.maps = observable(asMap(temp));
-  }
-
+  maps = observable(asMap(
+      // create an empty arrays for each game to hold the mapNames
+      [...steamapps.keys()].reduce(function (acc, gamename) {
+        if (!acc[gamename]) {
+          acc[gamename] = [];
+        }
+        return acc;
+      }, {
+        "Team Fortress 2": ["cp_dustbowl", "pl_badwater"],
+        "Counter-Strike: Global Offensive": ["cs_italy"]
+      })
+  ));
 
   getGameMaps(gameName) {
-    return this.maps[gameName] || [];
+    return this.maps.get(gameName) || [];
   }
 
   getKnownGames() {
-    return [...this.maps.keys()];
+    return [...this.maps.keys()] || [];
+  }
+
+
+
+  lookupAppId(gameName) {
+    return steamapps[gameName];
   }
 
 
   /**
-   * adds a map to the list of known maps
-   * @param gameName
-   * @param mapName
+   * Adds a map of {gameName:[mapName1, mapName2,
+   * @param mapOfMaps
    */
-  addToMapCache(gameName, mapName) {
-    if (this.getGameMaps(gameName).isEmpty()) {
-      this.maps[gameName] = [];
-    }
-    this.maps[gameName].push(mapName);
+  mergeToMapCache( mapOfMaps ) {
+    this.maps.merge(map);
   }
 }
 
-export default KnownGameMaps;
+const knownGameMaps = new KnownGameMaps();    // singleton
+const lookupAppId = knownGameMaps.lookupAppId;
+
+export {  knownGameMaps, lookupAppId};

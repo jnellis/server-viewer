@@ -1,15 +1,14 @@
-import React from "react"; 
+import React from "react";
 import {observer} from "mobx-react";
 import MapPicker from "./MapPicker";
 import GamePicker from "./GamePicker";
-import QueryFilter from "./stores/QueryFilter";
 
 /**
  * A user interface for weening the request parameters for a search of
  * game server info from a master server.
  */
 @observer
-class GameServerFilter extends React.Component { 
+class GameServerFilter extends React.Component {
 
   filterComponents() {
     return [
@@ -38,29 +37,37 @@ class GameServerFilter extends React.Component {
 
 
   render() {
-    console.log(this.props);
+
+
     return (
         <form className="gameServerFilterForm" onSubmit={this.handleSubmit }>
           <h1>Master Server Query Builder</h1>
-          
+
           <h2>queryString is {this.props.appState.queryFilter.filter }</h2>
-          <GamePicker {...this.props} />
-          <input type="reset" value="Reset" onClick={this.reset} />
+          <GamePicker {...this.props  } />
+          <MapPicker {...this.props  }/>
+          <input type="submit" value="Refresh"/>
+          <input type="reset" value="Reset" onClick={this.reset}/>
         </form>
     );
   }
 
-  reset = ()=>{ 
-    this.props.appState.queryFilter = new QueryFilter();
+  reset = ()=> {
+    this.props.appState.queryFilter.resetFilter();
+    this.props.appState.serverData.resetData()
   }
 
   /**
    * Send query to master server via web socket
    * @param e   submit button event
    */
-  handleSubmit(e) {
-    e.preventDefault();
-    e.stopPropagation();  
+  handleSubmit = (event)=> {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.props.appState.serverData.resetData();
+    this.props.appState.submitMasterQuery(this.props.appState.queryFilter);
+
   }
 }
 
