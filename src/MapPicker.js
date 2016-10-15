@@ -15,7 +15,7 @@ class MapPicker extends React.Component {
     var options = availableMaps.map(name=><option key={name}>{name}</option>);
     return (
         <div>
-          <label for="mapPicker">Map</label>
+          <label htmlFor="mapPicker">Map</label>
           <select name="mapPicker" onChange={this.changeMap}
                   value={currentMap}>
             <option name="anyMap" value="">any</option>

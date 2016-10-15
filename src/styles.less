@@ -1,0 +1,312 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/*
+ * colors
+ */
+@cell-border-color: #e0e0e0;
+
+/*
+ * Define the widths: play around with these
+ * to get a best fit.
+ */
+@index-width: 24px;
+@flag-width: 16px;
+@servers-width: 228px;
+@ip-width: 180px;
+@game-width: 140px;
+@map-width: 140px;
+@latency-width: 50px;
+@players-width: 50px;
+@margin-width: 20px;
+
+/*
+ * Basic styles, good for a large display. Everything fits in
+ * one row, no wrapping. All text based cells grow equally.
+ */
+// Main container - row container
+.tablerow {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  line-height: 150%;
+
+  //min-width: (@servers-width + @map-width + @game-width + @ip-width +
+  // @latency-width + @players-width + @index-width + ( @flag-width * 3));
+}
+
+// Wrappers around cells and other wrappers
+.wrapper {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+}
+
+// leaf level containers (cells): common properties
+.column {
+  flex-grow: 0;
+  -webkit-flex-grow: 0;
+  flex-shrink: 0;
+  -webkit-flex-shrink: 0;
+  vertical-align: top;
+}
+
+// leaf level containers: widths
+.index {
+  width: @index-width;
+}
+
+.flag {
+  width: @flag-width;
+}
+
+.servers {
+  width: @servers-width;
+}
+
+.map {
+  width: @map-width;
+}
+
+.ip {
+  width: @ip-width;
+}
+
+.game {
+  width: @game-width
+}
+
+.latency {
+  width: @latency-width;
+}
+
+.players {
+  width: @players-width;
+}
+
+// leaf level containers (cells): special properties
+.header{
+  text-align: left;
+
+}
+.index {
+  text-align: left;
+}
+
+.flag img {
+  height: @flag-width;
+}
+
+.servers {
+  font-weight: bold;
+  color: #337AB5;
+}
+
+.ip, .latencyPlayers  {
+  text-align: right;
+  font-family: 'Oxygen Mono', monospace;
+  font-size: smaller;
+}
+.header{
+  .ip, .latencyPlayers{
+    text-align: justify;
+    font-family: serif;
+    font-size: inherit;
+  }
+}
+
+// these are growable text containers, with ellipsis to show truncated text
+.servers, .map, .game {
+  flex-grow: 1;
+  -webkit-flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 4px;
+}
+
+/* growable wrappers */
+.gameIp, .serversMap, .serversMapIpGame, .attributes {
+  flex-grow: 1;
+  -webkit-flex-grow: 1;
+}
+
+.serversMap {
+  flex-grow: 10;
+  -webkit-flex-grow: 10;
+}
+
+.servers {
+  flex-grow: 3;
+  -webkit-flex-grow: 3;
+}
+
+/*
+ * Media queries: optimize for different screen widths.
+ */
+
+// Wrapper widths
+@index-flag-width: max(@index-width, @flag-width);
+
+@serversMap-width: max(@servers-width, @map-width);
+@gameIp-width: max(@game-width, @ip-width);
+@latencyPlayers-width: max(@latency-width, @players-width);
+
+@serversMapIpGame-width: max(@servers-width, @map-width, @ip-width, @game-width);
+
+@all-attributes-width: max(@serversMapIpGame-width,  (@latency-width + @players-width));
+
+.horizontal() {
+  flex-direction: row;
+  -webkit-flex-direction: row;
+}
+
+.vertical() {
+  // Let the wrapper flex vertically, so we get 2 rows
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  // can't have the children grow, since this now means vertical growth
+  div {
+    flex-grow: 0;
+    -webkit-flex-grow: 0;
+  }
+}
+
+.vertical-growing() {
+  .vertical();
+  > div {
+    // Let immediate child divs grow horizontally, 100% to fill the wrapper
+    width: 100%;
+  }
+}
+
+/*
+ * Media breaks.
+ */
+
+// Stack server and map, game and ip, latency and players, wrap flag icons
+@media all and (max-width: (@margin-width * 2 + @index-width +  @flag-width * 3
+  + @servers-width   + @map-width    + @game-width
+  + @ip-width   + @latency-width + @players-width) ) {
+
+  .serversMap {
+    .vertical-growing();
+    width: @serversMap-width;
+  }
+
+  .gameIp, .latencyPlayers {
+    .vertical();
+  }
+}
+
+// stack flags under index, servers & maps & game & ip, allow ip to roll under latency/players
+@media all and (max-width: (@margin-width * 2 + @index-width + @flag-width * 3
+  + @serversMap-width + @gameIp-width    + @latencyPlayers-width ) ) {
+
+  // line up index and all flags in one column
+  .flags {
+    .vertical();
+    .flag img {
+      height: @flag-width * 2/3;
+    }
+  }
+
+}
+
+// Last break: 3 columns: index w/ flags, serverInfo, latency & players
+@media all and (max-width: ( @margin-width * 2 + @index-flag-width
+   + @serversMap-width + @gameIp-width  + @latencyPlayers-width) ) {
+
+  // looks better with a little padding on mobile devices
+  .tablerow {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  // All attributes: servers, ip, gameIp, latencyPlayers, severity
+  .serversMapIpGame {
+    .vertical-growing();
+    width: @all-attributes-width;
+  }
+
+  .latency {
+    text-align: right;
+    span {
+      font-size: xx-small;
+    }
+  }
+
+  .players, .ip {
+    text-align: center;
+  }
+
+  .gameIp {
+    .horizontal();
+    font-size: smaller;
+  }
+
+  .game {
+    white-space: pre;
+    text-overflow: clip;
+    overflow: visible;
+  }
+
+}
+
+/*
+ * General good-look styles
+ */
+.tablerow {
+  border-bottom: 1px solid @cell-border-color;
+  border-collapse: collapse;
+  padding-top: 2px;
+}
+
+.tablerow.header {
+  background-color: #FFEEDB;
+  font-weight: bold;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  .column {
+    text-align: left;
+    font-family: serif;
+  }
+}
+
+.header {
+  color: #333;
+}
+
+.game {
+  color: #999999;
+}
+
+.noflag {
+  visibility: hidden;
+}
+
+.good{
+  color: darkgreen;
+}
+.ok{
+  color: darkorange;
+}
+.bad{
+  color: red;
+}
+
+.pageControl {
+  margin: auto 15px;
+}

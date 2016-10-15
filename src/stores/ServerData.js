@@ -8,7 +8,7 @@ class ServerData {
         this.receivedMessages.replace(this.receivedMessages.concat(this.burstCache));
         this.burstCache = [];
       }
-    }, 250);
+    }, 16); // 60fps frame time.
   }
 
   receivedMessages = observable(asFlat([]));
@@ -18,7 +18,8 @@ class ServerData {
   @observable reset = false;
 
   @action resetData() {
-    this.receivedMessages.clear()
+    this.reset = true;
+    // this.receivedMessages.clear()
   }
 
   addQueryResult(queryResult) {

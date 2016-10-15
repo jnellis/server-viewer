@@ -4,32 +4,35 @@ import {getShortUID} from "../util";
 
 class QueryFilter {
 
-  @observable region = "WORLD";
+  @observable region;
 
-  @observable gameName = "";
-  @observable mapName = "";
-  @observable notGameName = "";
-  @observable matchingHostName = "";
-  @observable runningVersion = "";
-  @observable runningModDir = "";
-  @observable onlyFromIpAddr = "";
-  @observable linux = false;
-  @observable proxy = false;
-  @observable secure = true;
-  @observable noPlayers = false;
-  @observable whitelisted = false;
-  @observable returnOneServerPerAddress = false;
-  @observable dedicated = true;
-  @observable notEmpty = false;
-  @observable notFull = false;
-  @observable gameTags = [];
-  @observable hiddenGameTags = [];
-  @observable reset = false;
-
+  @observable gameName;
+  @observable mapName;
+  @observable notGameName;
+  @observable matchingHostName;
+  @observable runningVersion;
+  @observable runningModDir;
+  @observable onlyFromIpAddr;
+  @observable linux;
+  @observable proxy;
+  @observable secure;
+  @observable noPlayers;
+  @observable whitelisted;
+  @observable returnOneServerPerAddress;
+  @observable dedicated;
+  @observable notEmpty;
+  @observable notFull;
+  @observable gameTags;
+  @observable hiddenGameTags;
+  @observable reset;
 
   @observable needsRules = false;
 
   queryId = getShortUID();
+
+  constructor(){
+    this.resetFilter();
+  }
 
   @action updateState(key, gameName) {
     if (!key in this) {
@@ -39,7 +42,33 @@ class QueryFilter {
   }
 
   @action resetFilter() {
-    return this.reset = true;
+
+    this.region = "WORLD";
+
+    this.gameName = "";
+    this.mapName = "";
+    this.notGameName = "";
+    this.matchingHostName = "";
+    this.runningVersion = "";
+    this.runningModDir = "";
+    this.onlyFromIpAddr = "";
+    this.linux = false;
+    this.proxy = false;
+    this.secure = true;
+    this.noPlayers = false;
+    this.whitelisted = false;
+    this.returnOneServerPerAddress = false;
+    this.dedicated = true;
+    this.notEmpty = false;
+    this.notFull = false;
+    this.gameTags = [];
+    this.hiddenGameTags = [];
+    this.reset = false;
+
+
+    this.needsRules = false;
+
+    this.queryId = getShortUID();
   }
 
   @computed get availableMaps() {
@@ -61,7 +90,7 @@ class QueryFilter {
     ].join('');
   }
 
-  toString(){
+  toString() {
     return filter;
   }
 }

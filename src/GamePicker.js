@@ -12,7 +12,7 @@ class GamePicker extends React.Component {
         (game)=> <option key={game} value={game}>{game}</option>);
     return (
         <div >
-          <label for="gamePicker">Game </label>
+          <label htmlFor="gamePicker">Game </label>
           <select name="gamePicker" onChange={ this.changeCurrentGame }
                   value={currentGame}>
             <option key="Any" value="">any</option>
