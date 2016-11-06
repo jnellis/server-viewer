@@ -27,7 +27,7 @@ class WebSocketSupport {
 
 
   initializeWebSocket() {
-    if (this.webSocket &&
+    if ((!!this.webSocket) &&
         this.webSocket.readyState < WebSocket.CLOSING) {
       return; // existing web socket is still open
     }
@@ -59,6 +59,7 @@ class WebSocketSupport {
 
   submitQuery(payload) {
     if (!!payload) {
+      this.initializeWebSocket();
       if (this.webSocket.readyState == WebSocket.OPEN) {
         this.webSocket.send( payload );
         console.log("sent websocket query:" + payload);

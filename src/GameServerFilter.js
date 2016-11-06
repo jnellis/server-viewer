@@ -1,4 +1,5 @@
 import React from "react";
+import {action} from "mobx";
 import {observer} from "mobx-react";
 import MapPicker from "./MapPicker";
 import GamePicker from "./GamePicker";
@@ -8,7 +9,7 @@ import GamePicker from "./GamePicker";
  * game server info from a master server.
  */
 @observer
-class GameServerFilter extends React.Component {
+export default class GameServerFilter extends React.Component {
 
   filterComponents() {
     return [
@@ -38,30 +39,31 @@ class GameServerFilter extends React.Component {
 
   render() {
 
+    const {queryFilter} = this.props.appState;
 
     return (
         <form className="gameServerFilterForm" onSubmit={this.handleSubmit }>
           <h1>Master Server Query Builder</h1>
-
-          <h2>queryString is {this.props.appState.queryFilter.filter }</h2>
-          <GamePicker {...this.props  } />
-          <MapPicker {...this.props  }/>
+          <h2>queryString is {queryFilter.filter }</h2>
+          <GamePicker {...{queryFilter}} />
+          <MapPicker {...{queryFilter}}/>
           <input type="submit" value="Refresh"/>
           <input type="reset" value="Reset" onClick={this.reset}/>
         </form>
     );
   }
 
-  reset = ()=> {
+  @action reset = ()=> {
     this.props.appState.queryFilter.resetFilter();
     this.props.appState.serverData.resetData()
+
   }
 
   /**
    * Send query to master server via web socket
    * @param e   submit button event
    */
-  handleSubmit = (event)=> {
+  @action handleSubmit = (event)=> {
     event.preventDefault();
     event.stopPropagation();
 
@@ -72,4 +74,3 @@ class GameServerFilter extends React.Component {
 }
 
 
-export default GameServerFilter;

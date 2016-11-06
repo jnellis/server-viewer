@@ -19,15 +19,11 @@ class ServerData {
 
   @action resetData() {
     this.reset = true;
-    // this.receivedMessages.clear()
   }
 
   addQueryResult(queryResult) {
     this.burstCache.push(queryResult);
   }
-
-
-
 }
 
 export default ServerData;

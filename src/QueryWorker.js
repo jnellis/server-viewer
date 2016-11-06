@@ -1,5 +1,5 @@
 import WebSocketSupport from "./WebSocketSupport";
-
+import {computed } from "mobx";
 
 self.serverResponseHandler = ((onMessageEvent)=>{
   // This function handles the server responses to queries sent in the
@@ -12,10 +12,7 @@ self.serverResponseHandler = ((onMessageEvent)=>{
 
 });
 
-
 self.webSocketSupport = new WebSocketSupport( self.serverResponseHandler);
-
-
 
 onmessage = function (event) {
   var message = JSON.parse(event.data);

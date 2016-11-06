@@ -4,15 +4,19 @@
 import React from "react";
 import {action} from "mobx";
 import {observer} from "mobx-react";
+import QueryFilter from "./stores/QueryFilter";
 
 @observer
 class MapPicker extends React.Component {
 
-  render() {
-    var currentMap = this.props.appState.queryFilter.mapName;
-    var availableMaps = this.props.appState.queryFilter.availableMaps;
+  static propTypes = {
+    queryFilter: React.PropTypes.instanceOf(QueryFilter).isRequired
+  }
 
-    var options = availableMaps.map(name=><option key={name}>{name}</option>);
+  render() {
+    const { mapName:currentMap, availableMaps} = this.props.queryFilter;
+    const options = availableMaps.map(name=><option key={name}>{name}</option>);
+
     return (
         <div>
           <label htmlFor="mapPicker">Map</label>
@@ -27,7 +31,7 @@ class MapPicker extends React.Component {
   }
 
   changeMap = action((event)=> {
-    this.props.appState.queryFilter.updateState("mapName", event.target.value);
+    this.props.queryFilter.updateState("mapName", event.target.value);
   });
 }
 

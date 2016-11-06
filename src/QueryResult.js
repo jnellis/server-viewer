@@ -26,6 +26,7 @@ import {
 
 const style = (...args)=> args.join(" ");
 
+
 export default class QueryResult extends React.Component {
   constructor(props) {
     super(props);

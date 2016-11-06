@@ -1,5 +1,7 @@
-
-class WebWorkerSupport {
+/**
+ *  Manages the source server query web worker object.
+ */
+export default class WebWorkerSupport {
 
   worker;
 
@@ -33,6 +35,7 @@ class WebWorkerSupport {
 
   postMessage(query){
 
+
     // bypass built-in browser cloning of object messages
     // and convert to strings and transport only strings.
     var stringifiedQuery = JSON.stringify(query);
@@ -40,7 +43,4 @@ class WebWorkerSupport {
     this.worker.postMessage(stringifiedQuery);
   }
 
-
 }
-
-export default WebWorkerSupport;

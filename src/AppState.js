@@ -4,24 +4,30 @@ import ServerData from "./stores/ServerData";
 import WebWorkerSupport from "./WebWorkerSupport";
 
 
-class AppState {
+export default class AppState {
 
   filter = new QueryFilter();
 
   @computed get queryFilter() {
-    return this.filter = this.filter.reset ? new QueryFilter() : this.filter;
+    return (this.filter = !!this.filter.reset ? new QueryFilter() : this.filter)
   }
 
   data = new ServerData();
 
-  @computed get serverData() {
-    return this.data = this.data.reset ? new ServerData() : this.data;
+  @computed get serverData(){
+    if( this.data.reset ){
+      this.data = new ServerData();
+    }
+    return  this.data;
   }
 
-  // web worker takes a
-  webWorker = new WebWorkerSupport( (response)=> {
+  responseHandler = (response)=> {
+    // @computed above should always give us valid serverData object.
     this.serverData.addQueryResult(response);
-  });
+  }
+
+  // web worker takes a response handler
+  webWorker = new WebWorkerSupport( this.responseHandler );
 
   submitMasterQuery(queryFilter) {
     this.webWorker.postMessage({
@@ -34,4 +40,3 @@ class AppState {
   }
 }
 
-export default AppState;

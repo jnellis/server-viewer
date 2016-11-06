@@ -10,13 +10,10 @@
 import React from "react";
 import {observer} from "mobx-react";
 import QueryResult from "./QueryResult";
-
 import {pageControl, header, tablerow, ip} from "./styles.less";
-
 
 @observer
 class GameServerViewer extends React.Component {
-
 
   constructor(props) {
     super(props);
@@ -41,30 +38,32 @@ class GameServerViewer extends React.Component {
   index >= this.state.currentPage * this.state.pageSize &&
   index < (this.state.currentPage + 1) * this.state.pageSize;
 
+  hasServerInfo = (queryResult)=> !!queryResult.serverInfo;
 
   render() {
+    const {receivedMessages} = this.props.appState.serverData;
 
-    let numResults = this.props.appState.serverData.receivedMessages.length;
+    const numResults = receivedMessages.length;
 
-    let maxPage = Math.round(numResults / this.state.pageSize);
+    const maxPage = Math.round(numResults / this.state.pageSize);
 
-    let pageBack = this.state.currentPage > 0 ?
+    const pageBack = this.state.currentPage > 0 ?
         <button className={pageControl}
                 onClick={
                   ()=>this.setState({currentPage: this.state.currentPage - 1})
                 }>&lt;&lt;</button> : null;
 
-    let pageForward = this.state.currentPage < maxPage - 1 ?
+    const pageForward = this.state.currentPage < maxPage - 1 ?
         <button className={pageControl}
                 onClick={
                   ()=>this.setState({currentPage: this.state.currentPage + 1})
                 }>&gt;&gt;</button> : null;
 
-    let indexAtStartOfPage = this.state.currentPage * this.state.pageSize;
+    const indexAtStartOfPage = this.state.currentPage * this.state.pageSize;
 
-    let queryResults = this.props.appState.serverData.receivedMessages
+    const queryResults = receivedMessages.filter(this.hasServerInfo)
         .sort((a, b)=> {
-          let firstOrdering = this.state.primarySort(a, b);
+          const firstOrdering = this.state.primarySort(a, b);
           if (firstOrdering != 0) {
             return firstOrdering;
           }
@@ -74,16 +73,16 @@ class GameServerViewer extends React.Component {
         .map((queryResult, index) =>
             <QueryResult key={queryResult.from}
                          index={index + indexAtStartOfPage}
-                         {...queryResult}/>);
+                         {...queryResult}/>
+        );
 
-    // console.log(JSON.stringify(
-    //     this.props.appState.serverData.receivedMessages[0]
-    // ));
 
     return (
+
         <div className="container-fluid">
-          <div className={tablerow +" "+header}>
-            {pageBack} Page {this.state.currentPage + 1}  of {maxPage}{pageForward}
+          <div className={tablerow + " " + header}>
+            {pageBack} Page {this.state.currentPage + 1}
+            of {maxPage}{pageForward}
           </div>
           {QueryResult.header(numResults, header)}
           {queryResults}

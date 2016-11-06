@@ -2,10 +2,15 @@ import React from "react";
 import {observer} from "mobx-react";
 import DevTools from "mobx-react-devtools";
 import SourceServerView from "./SourceServerView";
+import AppState from "./AppState";
 
 
 @observer
-class App extends React.Component {
+export default class App extends React.Component {
+
+  static propTypes = {
+    appState: React.PropTypes.instanceOf(AppState).isRequired
+  };
 
   render() {
     return (
@@ -15,6 +20,4 @@ class App extends React.Component {
         </div>
     );
   }
-
 }
-export default App;

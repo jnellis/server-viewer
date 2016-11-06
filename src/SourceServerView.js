@@ -13,12 +13,11 @@ import GameServerFilter from "./GameServerFilter";
 import GameServerViewer from "./GameServerViewer";
 
 
+
 @observer
-class SourceServerView extends React.Component {
+export default class SourceServerView extends React.Component {
 
   render() {
-
-
     return (
         <div>
           <GameServerFilter {...this.props}/>
@@ -28,5 +27,3 @@ class SourceServerView extends React.Component {
   }
 
 }
-
-export default SourceServerView;

@@ -1,15 +1,24 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {knownGameMaps} from "./stores/KnownGameMaps";
+import QueryFilter from "./stores/QueryFilter";
 
 @observer
 class GamePicker extends React.Component {
 
+  static propTypes = {
+    queryFilter: React.PropTypes.instanceOf(QueryFilter).isRequired
+  }
+
   render() {
-    var knownGames =  knownGameMaps.getKnownGames();
-    var currentGame = this.props.appState.queryFilter.gameName;
-    var options = knownGames.map(
+
+    //console.log(JSON.stringify(this.props));
+    const knownGames =  knownGameMaps.getKnownGames();
+    const currentGame = this.props.queryFilter.gameName;
+    const options = knownGames.map(
         (game)=> <option key={game} value={game}>{game}</option>);
+
+
     return (
         <div >
           <label htmlFor="gamePicker">Game </label>
@@ -23,8 +32,8 @@ class GamePicker extends React.Component {
   }
 
   changeCurrentGame = (event)=> {
-    this.props.appState.queryFilter.updateState("gameName", event.target.value);
-    this.props.appState.queryFilter.updateState("mapName","");
+    this.props.queryFilter.updateState("gameName", event.target.value);
+    this.props.queryFilter.updateState("mapName","");
   }
 }
 
