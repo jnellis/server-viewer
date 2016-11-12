@@ -39,7 +39,7 @@ export default class GameServerFilter extends React.Component {
 
   render() {
 
-    const {queryFilter} = this.props.appState;
+    const queryFilter = this.props.appState.queryFilter;
 
     return (
         <form className="gameServerFilterForm" onSubmit={this.handleSubmit }>

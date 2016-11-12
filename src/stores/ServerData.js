@@ -17,13 +17,14 @@ class ServerData {
 
   @observable reset = false;
 
-  @action resetData() {
+ resetData() {
     this.reset = true;
   }
 
   addQueryResult(queryResult) {
     this.burstCache.push(queryResult);
   }
+
 }
 
 export default ServerData;

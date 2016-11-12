@@ -5,6 +5,8 @@
     "stage-1"
   ],
   "plugins": [
+    // required for mobx decorator
+    // https://github.com/mobxjs/mobx/issues/105
     "transform-decorators-legacy",
     "react-hot-loader/babel"
   ]
